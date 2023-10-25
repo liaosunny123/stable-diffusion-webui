@@ -17,7 +17,8 @@ from fastapi.encoders import jsonable_encoder
 from secrets import compare_digest
 
 import modules.shared as shared
-from modules import sd_samplers, deepbooru, sd_hijack, images, scripts, ui, postprocessing, errors, restart, shared_items
+from modules import sd_samplers, deepbooru, sd_hijack, images, scripts, ui, postprocessing, errors, restart, \
+    shared_items, sd_models
 from modules.api import models
 from modules.shared import opts
 from modules.processing import StableDiffusionProcessingTxt2Img, StableDiffusionProcessingImg2Img, process_images
@@ -362,7 +363,11 @@ class Api:
 
         send_images = args.pop('send_images', True)
         args.pop('save_images', None)
-
+        if txt2imgreq.used_checkpoint_model is not None and txt2imgreq.used_checkpoint_model != "default":
+            if not str(txt2imgreq.used_checkpoint_model).endswith(".safetensors"):
+                txt2imgreq.used_checkpoint_model = txt2imgreq.used_checkpoint_model + ".safetensors"
+            checkpoint_info = sd_models.CheckpointInfo(txt2imgreq.used_checkpoint_model)
+            sd_models.reload_model_weights(info=checkpoint_info)
         with self.queue_lock:
             with closing(StableDiffusionProcessingTxt2Img(sd_model=shared.sd_model, **args)) as p:
                 p.is_api = True
