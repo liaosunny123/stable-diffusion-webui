@@ -111,14 +111,11 @@ then
     exit 1
 fi
 
-if [[ -d .git ]]
-then
-    printf "\n%s\n" "${delimiter}"
-    printf "Repo already cloned, using it as install directory"
-    printf "\n%s\n" "${delimiter}"
-    install_dir="${PWD}/../"
-    clone_dir="${PWD##*/}"
-fi
+printf "\n%s\n" "${delimiter}"
+printf "Skip original repo check by human."
+printf "\n%s\n" "${delimiter}"
+install_dir="${PWD}/../"
+clone_dir="${PWD##*/}"
 
 # Check prerequisites
 gpu_info=$(lspci 2>/dev/null | grep -E "VGA|Display")
