@@ -1023,7 +1023,7 @@ class StableDiffusionProcessingTxt2Img(StableDiffusionProcessing):
     hr_sampler_name: str = None
     hr_prompt: str = ''
     hr_negative_prompt: str = ''
-
+    used_checkpoint_model: str = ''
     cached_hr_uc = [None, None]
     cached_hr_c = [None, None]
 
